@@ -1,0 +1,206 @@
+#list {
+    width: 100%;
+    text-align: center;
+}
+
+#list li{
+    display: inline;
+    margin: 1em;
+}
+
+#list button{
+    border: none;
+    background-color: #ffffff;
+    font-size: min(50px, 6vw);
+    cursor: pointer;
+}
+
+#list button:hover {
+    text-decoration: underline solid 3px;
+}
+#add_task_div {
+    text-align:center;
+    width: 100%;
+}
+#add_task {
+    width: auto;
+    height: auto;
+    font-size: min(25px, 3vw);
+}
+
+.table {
+    margin-top: 2vw;
+    margin-left: 8vw;
+    margin-right: 8vw;
+    width: 84vw;
+    table-layout: fixed;
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+#weektable th {
+    border: 1px solid;
+    text-align: center;
+    max-width: 14vw;
+    width: 14vw;
+    min-width: 160px;
+    font-size: max(15px,1.5vw);
+}
+
+#weektable td {
+    vertical-align: top;
+    max-width: 14vw;
+    width: 14vw;
+    min-width: 160px;
+    margin: 0;
+    padding: 0;
+}
+
+#donetable th {
+    border: 1px solid;
+    text-align: center;
+    max-width: 14vw;
+    width: 14vw;
+    min-width: 160px;
+    font-size: max(15px,1.5vw);
+}
+
+#donetable td {
+    vertical-align: top;
+    max-width: 14vw;
+    width: 14vw;
+    min-width: 160px;
+    margin: 0;
+    padding: 0;
+}
+
+
+#todaytable th {
+    border: 1px solid;
+    text-align: center;
+    max-width: 28vw;
+    width: 28vw;
+    min-width: 320px;
+    font-size: max(30px,3vw);
+}
+
+#todaytable td {
+    vertical-align: top;
+    max-width: 28vw;
+    width: 28vw;
+    min-width: 320px;
+    margin: 0;
+    padding: 0;
+}
+
+#donetable th {
+    border: 1px solid;
+    text-align: center;
+    max-width: 28vw;
+    width: 28vw;
+    min-width: 320px;
+    font-size: max(30px,3vw);
+}
+
+#donetable td {
+    vertical-align: top;
+    max-width: 28vw;
+    width: 28vw;
+    min-width: 320px;
+    margin: 0;
+    padding: 0;
+}
+
+.deletenote {
+    float: right;
+}
+
+
+.table_lists {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.table_lists div {
+    margin-bottom: 0 !important;
+}
+.post_it {
+    cursor: grab;
+}
+
+.post_it > * {
+    padding: 0;
+    margin: 0;
+}
+
+#modal {
+    background:#ffc;
+    box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+    display:block;
+    height:30vh;
+
+}
+
+#add_task_title {
+    margin-left: 30%;
+    width: 40%;
+    margin-right: 15;
+}
+
+#add_tasker {
+    margin-left: 15%;
+    margin-right: 0%;
+    width: 10%;
+}
+
+.addstyling {
+    background-color: #ffc;
+    text-align: center;
+    padding: 3%;
+    border: none;
+}
+
+.failed {
+    width: auto !important;
+    height: auto !important;
+    font-size: min(15px, 2vw) !important;
+    float: right !important;
+}
+
+.dragstart {
+    border-bottom-style: dashed !important;
+    border-bottom-color: coral;
+}
+
+#end_week {
+    width: auto;
+    height: auto;
+    font-size: min(25px, 3vw);
+    margin-top: 1%
+}
+
+#statsbutton {
+    color: green;
+}
+
+#stats-table {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 2%;
+    margin-right: 5%;
+    border: solid;
+}
+
+#stats-table th {
+    width: 25%;
+    border: solid;
+    text-align: center;
+}
+
+#stats-table td {
+    border: solid;
+    text-align: center;
+}

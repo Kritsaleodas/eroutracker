@@ -1,0 +1,40 @@
+<body>
+    <table id="stats-table" class="table-responsive">
+        <tr>
+            <th></th>
+            <th scope="col">Filippos</th>
+            <th scope="col">Gina</th>
+            <th scope="col">Both</th>
+        </tr>
+        <tr>
+            <th scope="row">Total Tasks Done</th>
+            {% for x in range(3) %}
+            <td>{{ stats_data[x]['total_tasks_done'] }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th scope="row">Total Tasks Assigned</th>
+            {% for x in range(3) %}
+            <td>{{ stats_data[x]['total_tasks_assigned'] }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th scope="row">Success ratio</th>
+            {% for x in range(3) %}
+            <td>{{ stats_data[x]['success_ratio'] }}%</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th scope="row">Last 3</th>
+            {% for x in range(3) %}
+            <td>{{ stats_data[x]['last_three'] }}%</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th scope="row"># High Score</th>
+            {% for x in range(3) %}
+            <td>{{ stats_data[x]['high_score'] }} - Week: {{ stats_data[x]['high_score_weeks'] }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+</body>

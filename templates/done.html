@@ -1,0 +1,56 @@
+<body>
+    <div style="width: 100%; text-align:center;">
+        <button id="end_week" class="btn btn-success" onclick="endweek()">End Week</button>
+    </div>
+    <table id="donetable" class="table">
+        <tr>
+            <th>Filippos ({{ successful_tasks[0] }}/{{ length[0] }})</th>
+            <th>Gina ({{ successful_tasks[1] }}/{{ length[1] }})</th>
+            <th>Both ({{ successful_tasks[2] }}/{{ length[2] }})</th>
+        </tr>
+        <tr>
+            {% for x in range(3) %}
+                <td>
+                    <ul class="table_lists">
+                        {% for task in arrayz[x] %}
+                        <li style="margin: 0;">
+                            {% if task["success"] == 1 %}
+                            <div id="{{ task['name'] }}" class="card text-white bg-success mb-3" style="max-width: 100%; overflow: hidden;" draggable="true" ondragstart="drag(event)" ondragend="dragend(event)">
+                            {% elif task["success"] == -1 %}
+                            <div id="{{ task['name'] }}" class="card text-white bg-danger mb-3" style="max-width: 100%; overflow: hidden;" draggable="true" ondragstart="drag(event)" ondragend="dragend(event)">
+                            {% endif %}
+                                <div class="card-header" style="font-size: max(1.5vw, 0.9rem);">
+                                    {{ task["tasker"] }}
+                                    <button class="deletenote btn-close" onclick="remove(this)"></button>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text text-wrap" style="text-align: center; font-size: max(2vw,1rem);">{{ task["name"] }}</p>
+                                </div>
+                                {% if task["day"] == 'None' %}
+                                    <div class="card-footer" style="font-size: max(1.5vw, 0.9rem);">
+                                        {{ task["category"] }}
+                                        {% if task["success"] == 1 %}
+                                        <button type="button" class="failed btn btn-danger" onclick="fail(this)">Fail</button>
+                                        {% else %}
+                                        <button type="button" class="failed btn btn-success" onclick="fail(this)">Unfail</button>
+                                        {% endif %}
+                                    </div>
+                                    {% else %}
+                                    <div class="card-footer" style="font-size: max(1.5vw, 0.9rem);">
+                                        {{ task["category"] }}/ {{ task["day"] }}
+                                        {% if task["success"] == 1 %}
+                                        <button type="button" class="failed btn btn-danger" onclick="fail(this)">Fail</button>
+                                        {% else %}
+                                        <button type="button" class="failed btn btn-success" onclick="fail(this)">Unfail</button>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            {% endfor %}
+        </tr>
+    </table>
+</body>

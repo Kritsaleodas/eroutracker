@@ -1,7 +1,7 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, redirect, render_template, requestpgloader --no-ssl-cert-verification finance.db URI?sslmode=allow
+from flask import Flask, redirect, render_template, request
 from datetime import date,
 
 # Configure application

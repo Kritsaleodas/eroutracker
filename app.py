@@ -11,9 +11,6 @@ app = Flask(__name__)
 uri = "postgresql://srvqnueqstkzbv:3064c19f6fa2577038f4c9ed72a1088cfcffbc3821b81185b6ab1a44c1141491@ec2-176-34-215-248.eu-west-1.compute.amazonaws.com:5432/d9vd6rcei525g"
 db = SQL(uri)
 
-x = date.today().weekday()
-days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-db.execute("UPDATE tasks SET status = 1 WHERE day = ? AND status = 0;", days[x])
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -39,6 +36,9 @@ def index():
             db.execute("UPDATE tasks SET status = 2, success = 1 WHERE name = ?", id)
             return '', 204
     else:
+        today = date.today().weekday()
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        db.execute("UPDATE tasks SET status = 1 WHERE day = ? AND status = 0;", days[today])
         return render_template("main.html")
 
 @app.route("/week", methods=["GET", "POST"])

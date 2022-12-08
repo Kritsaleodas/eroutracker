@@ -1,16 +1,17 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, jsonify
-from flask_session import Session
-from tempfile import mkdtemp
-from datetime import date, datetime
+from flask import Flask, redirect, render_template, requestpgloader --no-ssl-cert-verification finance.db URI?sslmode=allow
+from datetime import date,
 
 # Configure application
 app = Flask(__name__)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///project.db")
+uri = os.getenv("postgres://srvqnueqstkzbv:3064c19f6fa2577038f4c9ed72a1088cfcffbc3821b81185b6ab1a44c1141491@ec2-176-34-215-248.eu-west-1.compute.amazonaws.com:5432/d9vd6rcei525g")
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://")
+db = SQL(uri)
 
 x = date.today().weekday()
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]

@@ -96,7 +96,7 @@ def done():
 @app.route("/stats", methods=["GET","POST"])
 def stats():
     #week 0 is already added in the table so MAX(week) will always return an int (will never return NONE)
-    week = db.execute("SELECT MAX(week) FROM stats;")[0]['MAX(week)']
+    week = db.execute("SELECT MAX(week) FROM stats;")[0]['max']
     if request.method == 'POST':
         week += 1
         tasks_done = {}
@@ -126,8 +126,8 @@ def stats():
             except:
                 x['success_ratio'] = 'Undefined'
             if week >= 3:
-                last_three_done = db.execute("SELECT SUM (tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['SUM (tasks_done)']
-                last_three_assigned = db.execute("SELECT SUM (tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['SUM (tasks_assigned)']
+                last_three_done = int(db.execute("SELECT SUM (tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
+                last_three_assigned = int(db.execute("SELECT SUM (tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
             else:
                 last_three_done = db.execute("SELECT tasks_done FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_done']
                 last_three_assigned = db.execute("SELECT tasks_assigned FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_assigned']
@@ -135,7 +135,7 @@ def stats():
                 x['last_three'] = round(100 * last_three_done/last_three_assigned, 1)
             except:
                 x['last_three'] = 'Undefined'
-            high_score_max = db.execute("SELECT MAX (tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0]['MAX (tasks_done)']
+            high_score_max = int(db.execute("SELECT MAX (tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0]['max'])
             high_score_weeks =  db.execute("SELECT week FROM stats WHERE tasker = ? AND NOT week = 0 AND tasks_done = ? ;", tasker, high_score_max)
             x['high_score'] = high_score_max
             x['high_score_weeks'] = str(high_score_weeks[0]['week'])
@@ -143,7 +143,6 @@ def stats():
                 for i in range(1, len(high_score_weeks)):
                     x['high_score_weeks'] += ', ' + str(high_score_weeks[i]['week'])
             stats_data += [x]
-        print(stats_data)
         return render_template("stats.html", stats_data=stats_data)
 
 if __name__ == "__main__":

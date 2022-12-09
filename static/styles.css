@@ -13,6 +13,8 @@
     background-color: #ffffff;
     font-size: min(50px, 6vw);
     cursor: pointer;
+    z-index: 100;
+    position: relative;
 }
 
 #list button:hover {
@@ -203,4 +205,12 @@
 #stats-table td {
     border: solid;
     text-align: center;
+}
+
+.dragover {
+    opacity: 60%;
+}
+
+.hide {
+    visibility: hidden;
 }

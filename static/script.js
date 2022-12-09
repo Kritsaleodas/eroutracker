@@ -42,6 +42,9 @@ function remove(element) {
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
+    setTimeout(() => {
+        $(ev.target).addClass('hide');
+    }, 0);
     $('.navls').each(function() {
         $(this).addClass('dragstart');
     })
@@ -51,11 +54,21 @@ function dragend(ev) {
     $('.navls').each(function() {
         $(this).removeClass('dragstart');
     })
+    $(ev.target).removeClass('hide');
 }
 
 function allowDrop(ev) {
     ev.preventDefault();
 }
+
+function on(ev) {
+    $(ev.target).removeClass('display-4').addClass('dragover');
+}
+
+function out(ev) {
+    $(ev.target).removeClass('dragover').addClass('display-4');
+}
+
 
 function drop(ev) {
     ev.preventDefault();

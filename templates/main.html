@@ -16,9 +16,9 @@
             <h1 class="text-center display-1">Gina and Filippos</h1>
                 <!--navbar-->
                     <ul id="list">
-                        <li><button id="weekbutton" class="display-4 navls" onclick="changehtml('/week', this.id)" ondrop="drop(event)" ondragover="allowDrop(event)">Week</button></li>
-                        <li><button id="todaybutton" class="display-4 navls" onclick="changehtml('/today', this.id)" ondrop="drop(event)" ondragover="allowDrop(event)">Today</button></li>
-                        <li><button id="donebutton" class="display-4 navls" onclick="changehtml('/done', this.id)" ondrop="drop(event)" ondragover="allowDrop(event)">Done</button></li>
+                        <li><button id="weekbutton" class="display-4 navls" onclick="changehtml('/week', this.id)" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="on(event)" ondragleave="out(event)">Week</button></li>
+                        <li><button id="todaybutton" class="display-4 navls" onclick="changehtml('/today', this.id)" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="on(event)" ondragleave="out(event)">Today</button></li>
+                        <li><button id="donebutton" class="display-4 navls" onclick="changehtml('/done', this.id)" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="on(event)" ondragleave="out(event)">Done</button></li>
                         <li><button id="statsbutton" class="display-4" onclick="changehtml('/stats', this.id)">Stats</button></li>
                     </ul>
                     <!-- Button trigger modal -->

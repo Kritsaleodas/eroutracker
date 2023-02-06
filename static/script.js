@@ -1,24 +1,29 @@
 var page = 'none';
 
-function changehtml(word, id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("board").innerHTML = this.responseText;
-        page = word;
-    }
-    };
-
-    const titles = document.querySelectorAll('.display-4');
-
-    titles.forEach(title => {
-        title.style.textDecoration = 'none';
+function changehtml(page, id) {
+   var jqXHR = $.ajax({
+        url: page,
+        method: "GET",
     });
+    jqXHR.always(function() {
+        $('#board').text("");
+    })
+    jqXHR.done(function(html) {
+        //clear underlined buttons on navbar and underline the current page's button
+        $('.display-4').css('text-decoration', 'none')
+        $('#'+id).css('text-decoration','underline solid 7%')
+        //changehtml of empty division
+        $('#add_task_div').append(html);
+        //call partready to add drag and drop effects now that the partial html has been loaded
+        partready();
+    })
+}
 
-    document.getElementById(id).style.textDecoration = 'underline solid 3px';
-
-    xhttp.open("GET", word, true);
-    xhttp.send();
+function partready() {
+    $('.card').each(function(obj) {
+        var tst = 
+    })
+    //attach drag n drop effects to all card elements
 }
 
 function remove(element) {
@@ -38,47 +43,6 @@ function remove(element) {
             wherez(where);
     })
 }
-
-
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-    setTimeout(() => {
-        $(ev.target).addClass('hide');
-    }, 0);
-    $('.navls').each(function() {
-        $(this).addClass('dragstart');
-    })
-}
-
-function dragend(ev) {
-    $('.navls').each(function() {
-        $(this).removeClass('dragstart');
-    })
-    $(ev.target).removeClass('hide');
-}
-
-function allowDrop(ev) {
-    ev.preventDefault();
-}
-
-function on(ev) {
-    $(ev.target).removeClass('display-4').addClass('dragover');
-}
-
-function out(ev) {
-    $(ev.target).removeClass('dragover').addClass('display-4');
-}
-
-
-function drop(ev) {
-    ev.preventDefault();
-    var id = ev.dataTransfer.getData("text");
-    var where = $(event.target).text();
-    $.post("/", {'id': id, 'where': where}).done(function(data) {
-        wherez(where);
-    });
-}
-
 
 function wherez(where) {
     if (where == 'Week') {
@@ -123,3 +87,9 @@ function endweek() {
 }
 
 
+//drag n drop stuff
+$(document).ready(function() {
+    $('#testtest').click(function() {
+        alert('f');
+    })
+})

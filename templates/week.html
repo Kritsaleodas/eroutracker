@@ -15,7 +15,7 @@
                         <ul class="table_lists">
                             {% for task in array[x] %}
                             <li style="margin: 0;">
-                                <div id="{{ task['name'] }}" class="card text-dark bg-light mb-3" style="max-width: 100%; overflow: hidden;" draggable="true" ondragstart="drag(event)" ondragend="dragend(event)">
+                                <div id="{{ task['name'] }}" class="card ui-widget-content text-dark bg-light mb-3" style="max-width: 100%; overflow: hidden;">
                                     <div class="card-header" style="font-size: max(1.5vw, 0.9rem);">
                                         {{ task["tasker"] }}
                                         <button class="deletenote btn-close" onclick="remove(this)"></button>

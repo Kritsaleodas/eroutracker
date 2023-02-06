@@ -18,7 +18,7 @@
 }
 
 #list button:hover {
-    text-decoration: underline solid 3px;
+    text-decoration: underline solid 7%;
 }
 #add_task_div {
     text-align:center;

@@ -145,6 +145,11 @@ def stats():
             stats_data += [x]
         return render_template("stats.html", stats_data=stats_data)
 
+@app.route("/one_time_action")
+def one_time_action():
+    #I will be using this to perform actions that only need to be carried out once, e.g. clear the database or stats table
+    db.execute("DELETE FROM stats;")
+
 if __name__ == "__main__":
     port = os.environ.get("PORT", 5000)
     app.run(debug=False, host="0.0.0.0")

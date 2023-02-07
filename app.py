@@ -116,39 +116,45 @@ def stats():
         except:
             return '', 404
     else:
-        stats_data = []
-        for tasker in ["F", "G", "B"]:
-            x = {}
-            x['total_tasks_done'] = db.execute("SELECT tasks_done FROM stats WHERE week = 0 AND tasker = ?;", tasker)[0]['tasks_done']
-            x['total_tasks_assigned'] = db.execute("SELECT tasks_assigned FROM stats WHERE week = 0 AND tasker = ?;", tasker)[0]['tasks_assigned']
-            try:
-                x['success_ratio'] = round(100 * x['total_tasks_done']/x['total_tasks_assigned'], 1)
-            except:
-                x['success_ratio'] = 'Undefined'
-            if week >= 3:
-                last_three_done = int(db.execute("SELECT SUM (tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
-                last_three_assigned = int(db.execute("SELECT SUM (tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
-            else:
-                last_three_done = db.execute("SELECT tasks_done FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_done']
-                last_three_assigned = db.execute("SELECT tasks_assigned FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_assigned']
-            try:
-                x['last_three'] = round(100 * last_three_done/last_three_assigned, 1)
-            except:
-                x['last_three'] = 'Undefined'
-            high_score_max = int(db.execute("SELECT MAX (tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0]['max'])
-            high_score_weeks =  db.execute("SELECT week FROM stats WHERE tasker = ? AND NOT week = 0 AND tasks_done = ? ;", tasker, high_score_max)
-            x['high_score'] = high_score_max
-            x['high_score_weeks'] = str(high_score_weeks[0]['week'])
-            if len(high_score_weeks) > 1:
-                for i in range(1, len(high_score_weeks)):
-                    x['high_score_weeks'] += ', ' + str(high_score_weeks[i]['week'])
-            stats_data += [x]
-        return render_template("stats.html", stats_data=stats_data)
+        if week == 0:
+            return render_template("statsempty.html")
+        else:
+            stats_data = []
+            for tasker in ["F", "G", "B"]:
+                x = {}
+                x['total_tasks_done'] = db.execute("SELECT tasks_done FROM stats WHERE week = 0 AND tasker = ?;", tasker)[0]['tasks_done']
+                x['total_tasks_assigned'] = db.execute("SELECT tasks_assigned FROM stats WHERE week = 0 AND tasker = ?;", tasker)[0]['tasks_assigned']
+                try:
+                    x['success_ratio'] = round(100 * x['total_tasks_done']/x['total_tasks_assigned'], 1)
+                except:
+                    x['success_ratio'] = 'Undefined'
+                if week >= 3:
+                    last_three_done = int(db.execute("SELECT SUM (tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
+                    last_three_assigned = int(db.execute("SELECT SUM (tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
+                else:
+                    last_three_done = db.execute("SELECT tasks_done FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_done']
+                    last_three_assigned = db.execute("SELECT tasks_assigned FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_assigned']
+                try:
+                    x['last_three'] = round(100 * last_three_done/last_three_assigned, 1)
+                except:
+                    x['last_three'] = 'Undefined'
+                high_score_max = int(db.execute("SELECT MAX (tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0]['max'])
+                high_score_weeks =  db.execute("SELECT week FROM stats WHERE tasker = ? AND NOT week = 0 AND tasks_done = ? ;", tasker, high_score_max)
+                x['high_score'] = high_score_max
+                x['high_score_weeks'] = str(high_score_weeks[0]['week'])
+                if len(high_score_weeks) > 1:
+                    for i in range(1, len(high_score_weeks)):
+                        x['high_score_weeks'] += ', ' + str(high_score_weeks[i]['week'])
+                stats_data += [x]
+            return render_template("stats.html", stats_data=stats_data)
 
 @app.route("/one_time_action")
 def one_time_action():
     #I will be using this to perform actions that only need to be carried out once, e.g. clear the database or stats table
     db.execute("DELETE FROM stats;")
+    for tasker in ["G", "F", "B"]:
+      db.execute("INSERT INTO stats (week, tasker, tasks_done, tasks_assigned) VALUES (0, ?, 0, 0)", tasker)
+    return redirect("/")
 
 if __name__ == "__main__":
     port = os.environ.get("PORT", 5000)

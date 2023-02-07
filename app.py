@@ -62,7 +62,7 @@ def week():
 
     else:
         array = []
-        for x in ["room", "kitchen", "cats", "kindergarden", "entertainment", "other"]:
+        for x in ["Room", "Kitchen", "Cats", "Kindergarden", "Entertainment", "Other"]:
             array += [db.execute("SELECT * FROM tasks WHERE category = ? AND status = 0;", x)]
         return render_template("week.html", array=array)
 

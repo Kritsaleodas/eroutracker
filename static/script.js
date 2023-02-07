@@ -15,16 +15,16 @@ function changehtml(page, id) {
         //changehtml of empty division
         $('#add_task_div').append(html);
         //call partready to add drag and drop effects now that the partial html has been loaded
-        partready();
+        //partready();
     })
 }
 
-function partready() {
-    $('.card').each(function(obj) {
-        var tst = 
-    })
-    //attach drag n drop effects to all card elements
-}
+// function partready() {
+//     $('.card').each(function(obj) {
+//         var tst =
+//     })
+//     //attach drag n drop effects to all card elements
+// }
 
 function remove(element) {
     var id = element.parentNode.parentNode.id;

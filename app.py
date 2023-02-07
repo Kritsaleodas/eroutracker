@@ -7,10 +7,21 @@ from datetime import date
 # Configure application
 app = Flask(__name__)
 
-# Configure CS50 Library to use SQLite database
-uri = "postgresql://srvqnueqstkzbv:3064c19f6fa2577038f4c9ed72a1088cfcffbc3821b81185b6ab1a44c1141491@ec2-176-34-215-248.eu-west-1.compute.amazonaws.com:5432/d9vd6rcei525g"
-db = SQL(uri)
+#Configure CS50 Library to use SQLite database
 
+uri = "sqlite:///project.db"
+db = SQL(uri)
+max_week = 'MAX(week)'
+max_tasks_done = 'MAX(tasks_done)'
+sum_tasks_assigned = 'SUM(tasks_assigned)'
+sum_tasks_done = 'SUM(tasks_done)'
+
+# uri = "postgresql://srvqnueqstkzbv:3064c19f6fa2577038f4c9ed72a1088cfcffbc3821b81185b6ab1a44c1141491@ec2-176-34-215-248.eu-west-1.compute.amazonaws.com:5432/d9vd6rcei525g"
+# db = SQL(uri)
+# max_week = 'max'
+# max_tasks_done = 'max'
+# sum_tasks_assigned = 'sum'
+# sum_tasks_done = 'sum'
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -44,7 +55,7 @@ def index():
 @app.route("/week", methods=["GET", "POST"])
 def week():
     if request.method == 'POST':
-
+        return 404
 
     else:
         array = []
@@ -74,7 +85,7 @@ def done():
 @app.route("/stats", methods=["GET","POST"])
 def stats():
     #week 0 is already added in the table so MAX(week) will always return an int (will never return NONE)
-    week = db.execute("SELECT MAX(week) FROM stats;")[0]['max']
+    week = db.execute("SELECT MAX(week) FROM stats;")[0][max_week]
     if request.method == 'POST':
         week += 1
         tasks_done = {}
@@ -104,8 +115,8 @@ def stats():
             except:
                 x['success_ratio'] = 'Undefined'
             if week >= 3:
-                last_three_done = int(db.execute("SELECT SUM (tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
-                last_three_assigned = int(db.execute("SELECT SUM (tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum'])
+                last_three_done = int(db.execute("SELECT SUM(tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0][sum_tasks_done])
+                last_three_assigned = int(db.execute("SELECT SUM(tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0][sum_tasks_assigned])
             else:
                 last_three_done = db.execute("SELECT tasks_done FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_done']
                 last_three_assigned = db.execute("SELECT tasks_assigned FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_assigned']
@@ -113,7 +124,7 @@ def stats():
                 x['last_three'] = round(100 * last_three_done/last_three_assigned, 1)
             except:
                 x['last_three'] = 'Undefined'
-            high_score_max = int(db.execute("SELECT MAX (tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0]['max'])
+            high_score_max = int(db.execute("SELECT MAX(tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0][max_tasks_done])
             high_score_weeks =  db.execute("SELECT week FROM stats WHERE tasker = ? AND NOT week = 0 AND tasks_done = ? ;", tasker, high_score_max)
             x['high_score'] = high_score_max
             x['high_score_weeks'] = str(high_score_weeks[0]['week'])

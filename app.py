@@ -44,29 +44,7 @@ def index():
 @app.route("/week", methods=["GET", "POST"])
 def week():
     if request.method == 'POST':
-        title = request.form.get("task_title")
-        tasker = request.form.get("Tasker")
-        category = request.form.get("category")
-        day = request.form.get("day")
 
-        #Add server-side validation
-        if not title:
-            return '', 404
-        if tasker not in ["filippos", "gina", "both"]:
-            return '', 404
-        if category not in ["room", "kitchen", "cats", "kindergarden", "entertainment", "other"]:
-            return '', 404
-        if day not in ["None", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]:
-            return '', 404
-
-        #Keep only the initial from tasker
-        tasker = tasker[0].upper()
-
-        #Add form inputs to the database
-        db.execute("INSERT INTO tasks (name, category, tasker, day, status) VALUES (?, ?, ?, ?, 0);",
-            title, category, tasker, day)
-
-        return redirect("/")
 
     else:
         array = []
@@ -144,6 +122,35 @@ def stats():
                     x['high_score_weeks'] += ', ' + str(high_score_weeks[i]['week'])
             stats_data += [x]
         return render_template("stats.html", stats_data=stats_data)
+
+@app.route("/add_task", methods=["POST"])
+#This handles the request of adding a task `
+def add_task():
+    #Get input fields from the form
+    title = request.form.get("task_title")
+    tasker = request.form.get("Tasker")
+    category = request.form.get("category")
+    day = request.form.get("day")
+
+    #Server-side validation
+    if not title:
+        return '', 404
+    if tasker not in ["Filippos", "Gina", "Both"]:
+        return '', 404
+    if category not in ["Room", "Kitchen", "Cats", "Kindergarden", "Entertainment", "Other"]:
+        return '', 404
+    if day not in ["None", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]:
+        return '', 404
+
+    #Keep only the initial from tasker
+    tasker = tasker[0]
+
+    #Insert form inputs to the database with status as 0
+    db.execute("INSERT INTO tasks (name, category, tasker, day, status) VALUES (?, ?, ?, ?, 0);",
+        title, category, tasker, day)
+
+    return redirect("/")
+
 
 if __name__ == "__main__":
     port = os.environ.get("PORT", 5000)

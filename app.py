@@ -7,7 +7,7 @@ from datetime import date
 # Configure application
 app = Flask(__name__)
 
-# Configure CS50 Library to use SQLite database
+# Configure Database. Will use a remote postgresql database managed by the Heroku platform
 uri = "postgresql://srvqnueqstkzbv:3064c19f6fa2577038f4c9ed72a1088cfcffbc3821b81185b6ab1a44c1141491@ec2-176-34-215-248.eu-west-1.compute.amazonaws.com:5432/d9vd6rcei525g"
 db = SQL(uri)
 

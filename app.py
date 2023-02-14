@@ -1,7 +1,7 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, Response
 from datetime import date
 
 # Configure application
@@ -10,11 +10,12 @@ app = Flask(__name__)
 #Configure Database
 
 #local-test database
-#uri = "sqlite:///test.db"
-#project database
-uri = "sqlite:///project.db"
-db = SQL(uri)
 
+#uri = "sqlite:///test.db"
+# #project database
+uri = postgres://projectdatabase_user:sBW5Pe4KPe92aFWUvCXjkGJS8k5ZEcQ7@dpg-cflr94pgp3ju5h5smcvg-a/projectdatabase
+# uri = "sqlite:///project.db"
+db = SQL(uri)
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -158,10 +159,23 @@ def add_task():
 
     return redirect("/")
 
+@app.route("/delete_task", methods=["POST"])
+def delete_task():
+    name = request.form['task_name']
+    current_page = request.form['current_page']
+    try:
+        db.execute("DELETE FROM tasks WHERE name = ?", name)
+        return redirect(current_page)
+    except:
+        return Response(status=404)
+
+
+
 @app.route("/one_time_action")
 def one_time_action():
     #I will be using this to perform actions that only need to be carried out once, e.g. clear the database or stats table
-    db.execute("DELETE FROM stats;")
+    db.execute("CREATE TABLE tasks (name TEXT PRIMARY KEY, category TEXT NOT NULL, day TEXT, tasker TEXT NOT NULL, status INTEGER NOT NULL, success INTEGER);")
+    db.execute("CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER);")
     for tasker in ["G", "F", "B"]:
       db.execute("INSERT INTO stats (week, tasker, tasks_done, tasks_assigned) VALUES (0, ?, 0, 0)", tasker)
     return redirect("/")

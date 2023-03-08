@@ -3,7 +3,10 @@ import os
 from cs50 import SQL
 from flask import Flask, redirect, render_template, request, Response
 from datetime import date
+import sqlalchemy as sa
+from flask_sqlalchemy import SQLAlchemy
 
+db = SQLAlchemy()
 # Configure application
 app = Flask(__name__)
 
@@ -12,18 +15,12 @@ app = Flask(__name__)
 if os.getenv('DATABASE_URL'):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace("postgres://", "postgresql://", 1)
 else:
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASEDIR, 'instance', 'app.db')}"
+    # local-test database
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
+    #project database
+    #uri = "sqlite:///project.db"
 
 db = SQL(SQLALCHEMY_DATABASE_URI)
-
-# local-test database
-
-# uri = "sqlite:///test.db"
-# db = SQL(uri)
-#project database
-
-# uri = "sqlite:///project.db"
-
 
 # max_week = 'MAX(week)'
 # max_tasks_done = 'MAX(tasks_done)'
@@ -35,15 +32,17 @@ db = SQL(SQLALCHEMY_DATABASE_URI)
 # sum_tasks_assigned = 'sum'
 # sum_tasks_done = 'sum'
 
-# engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-# inspector = sa.inspect(engine)
-# if not inspector.has_table("tasks"):
-#     with app.app_context():
-#         db.drop_all()
-#         db.create_all()
-#         app.logger.info('Initialized the database!')
-# else:
-#     app.logger.info('Database already contains the tasks table.')
+engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+inspector = sa.inspect(engine)
+if not inspector.has_table("tasks"):
+    with app.app_context():
+        db.drop_all()
+        db.execute('''CREATE TABLE tasks (name TEXT PRIMARY KEY, category TEXT NOT NULL, day TEXT, tasker TEXT NOT NULL, status INTEGER NOT NULL, success INTEGER);
+        CREATE TABLE sqlite_sequence(name,seq);
+        CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER);''')
+        app.logger.info('Initialized the database!')
+else:
+    app.logger.info('Database already contains the tasks table.')
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -73,6 +72,7 @@ def index():
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         db.execute("UPDATE tasks SET status = 1 WHERE day = ? AND status = 0;", days[today])
         return render_template("main.html")
+
 
 @app.route("/week", methods=["GET", "POST"])
 def week():

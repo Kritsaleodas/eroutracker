@@ -18,7 +18,7 @@
                                 <div id="{{ task['name'] }}" class="card text-dark bg-light mb-3" style="max-width: 100%; overflow: hidden;" draggable="true" ondragstart="drag(event)" ondragend="dragend(event)">
                                     <div class="card-header" style="font-size: max(1.5vw, 0.9rem);">
                                         {{ task["tasker"] }}
-                                        <button class="deletenote btn-close" onclick="remove(this)"></button>
+                                        <button class="deletenote btn-close" onclick="delete_task(this.parentNode.parentNode.id)"></button>
                                     </div>
 
                                     <div class="card-body">

@@ -1,11 +1,11 @@
-var page = 'none';
+var current_page;
 
 function changehtml(word, id) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         document.getElementById("board").innerHTML = this.responseText;
-        page = word;
+        current_page = word;
     }
     };
 
@@ -21,24 +21,13 @@ function changehtml(word, id) {
     xhttp.send();
 }
 
-function remove(element) {
-    var id = element.parentNode.parentNode.id;
-    var where = ''
-    if (page == '/week') {
-        where = 'Week';
-    }
-    if (page == '/today') {
-        where = 'Today';
-    }
-    if (page == '/done') {
-        where = 'Done';
-    }
-
-    $.post("/", {'id': id, 'where': 'delete'}).done(function(data) {
-            wherez(where);
+function delete_task(task_name) {
+    //make a post request to the delete task controller
+    //function(reponse) runs when req was successful
+    $.post("/delete_task", {'task_name': task_name, 'current_page': current_page}, function(response) {
+            $('#board').html(response);
     })
 }
-
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);

@@ -5,7 +5,7 @@ from flask import Flask, redirect, render_template, request, Response
 from datetime import date
 import sqlalchemy as sa
 
-db = SQL()
+
 # Configure application
 app = Flask(__name__)
 

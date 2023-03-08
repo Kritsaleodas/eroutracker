@@ -4,9 +4,8 @@ from cs50 import SQL
 from flask import Flask, redirect, render_template, request, Response
 from datetime import date
 import sqlalchemy as sa
-from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+db = SQL()
 # Configure application
 app = Flask(__name__)
 

@@ -15,10 +15,12 @@ if os.getenv('DATABASE_URL'):
         SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASEDIR, 'instance', 'app.db')}"
 
 db = SQL(SQLALCHEMY_DATABASE_URI)
-#local-test database
 
-#uri = "sqlite:///test.db"
-# #project database
+# local-test database
+
+# uri = "sqlite:///test.db"
+# db = SQL(uri)
+#project database
 
 # uri = "sqlite:///project.db"
 
@@ -28,20 +30,20 @@ db = SQL(SQLALCHEMY_DATABASE_URI)
 # sum_tasks_assigned = 'SUM(tasks_assigned)'
 # sum_tasks_done = 'SUM(tasks_done)'
 
-max_week = 'max'
-max_tasks_done = 'max'
-sum_tasks_assigned = 'sum'
-sum_tasks_done = 'sum'
+# max_week = 'max'
+# max_tasks_done = 'max'
+# sum_tasks_assigned = 'sum'
+# sum_tasks_done = 'sum'
 
-engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-inspector = sa.inspect(engine)
-if not inspector.has_table("tasks"):
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        app.logger.info('Initialized the database!')
-else:
-    app.logger.info('Database already contains the tasks table.')
+# engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+# inspector = sa.inspect(engine)
+# if not inspector.has_table("tasks"):
+#     with app.app_context():
+#         db.drop_all()
+#         db.create_all()
+#         app.logger.info('Initialized the database!')
+# else:
+#     app.logger.info('Database already contains the tasks table.')
 
 @app.route("/", methods=["POST", "GET"])
 def index():

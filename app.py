@@ -11,15 +11,18 @@ app = Flask(__name__)
 
 #Configure Database
 
-if os.getenv('DATABASE_URL'):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace("postgres://", "postgresql://", 1)
-else:
+# if os.getenv('DATABASE_URL'):
+#     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace("postgres://", "postgresql://", 1)
+# else:
     # local-test database
-    SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
+    # SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
     #project database
     #uri = "sqlite:///project.db"
+uri = 'postgresql://projectdatabase_mx3g_user:lpyRARzPm84DRr9JkiMZKzGzsaFRZ4K2@dpg-cg4at12k728m6o5kuh1g-a.frankfurt-postgres.render.com/projectdatabase_mx3g'
+db = SQL(uri)
 
-db = SQL(SQLALCHEMY_DATABASE_URI)
+# db.execute('CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER)')
+
 
 # max_week = 'MAX(week)'
 # max_tasks_done = 'MAX(tasks_done)'
@@ -31,17 +34,17 @@ db = SQL(SQLALCHEMY_DATABASE_URI)
 # sum_tasks_assigned = 'sum'
 # sum_tasks_done = 'sum'
 
-engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-inspector = sa.inspect(engine)
-if not inspector.has_table("tasks"):
-    with app.app_context():
-        db.drop_all()
-        db.execute('''CREATE TABLE tasks (name TEXT PRIMARY KEY, category TEXT NOT NULL, day TEXT, tasker TEXT NOT NULL, status INTEGER NOT NULL, success INTEGER);
-        CREATE TABLE sqlite_sequence(name,seq);
-        CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER);''')
-        app.logger.info('Initialized the database!')
-else:
-    app.logger.info('Database already contains the tasks table.')
+# engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+# inspector = sa.inspect(engine)
+# if not inspector.has_table("tasks"):
+#     with app.app_context():
+#         db.drop_all()
+#         db.execute('''CREATE TABLE tasks (name TEXT PRIMARY KEY, category TEXT NOT NULL, day TEXT, tasker TEXT NOT NULL, status INTEGER NOT NULL, success INTEGER);
+#         CREATE TABLE sqlite_sequence(name,seq);
+#         CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER);''')
+#         app.logger.info('Initialized the database!')
+# else:
+#     app.logger.info('Database already contains the tasks table.')
 
 @app.route("/", methods=["POST", "GET"])
 def index():

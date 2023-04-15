@@ -4,47 +4,15 @@ from cs50 import SQL
 from flask import Flask, redirect, render_template, request, Response
 from datetime import date
 import sqlalchemy as sa
-
+import sys
 
 # Configure application
 app = Flask(__name__)
 
-#Configure Database
-
-# if os.getenv('DATABASE_URL'):
-#     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace("postgres://", "postgresql://", 1)
-# else:
-    # local-test database
-    # SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
-    #project database
-    #uri = "sqlite:///project.db"
+# Configure Database
+#uri = "sqlite:///test.db"
 uri = 'postgresql://projectdatabase_mx3g_user:lpyRARzPm84DRr9JkiMZKzGzsaFRZ4K2@dpg-cg4at12k728m6o5kuh1g-a.frankfurt-postgres.render.com/projectdatabase_mx3g'
 db = SQL(uri)
-
-# db.execute('CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER)')
-
-
-# max_week = 'MAX(week)'
-# max_tasks_done = 'MAX(tasks_done)'
-# sum_tasks_assigned = 'SUM(tasks_assigned)'
-# sum_tasks_done = 'SUM(tasks_done)'
-
-# max_week = 'max'
-# max_tasks_done = 'max'
-# sum_tasks_assigned = 'sum'
-# sum_tasks_done = 'sum'
-
-# engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-# inspector = sa.inspect(engine)
-# if not inspector.has_table("tasks"):
-#     with app.app_context():
-#         db.drop_all()
-#         db.execute('''CREATE TABLE tasks (name TEXT PRIMARY KEY, category TEXT NOT NULL, day TEXT, tasker TEXT NOT NULL, status INTEGER NOT NULL, success INTEGER);
-#         CREATE TABLE sqlite_sequence(name,seq);
-#         CREATE TABLE stats (week INTEGER NOT NULL, tasker TEXT NOT NULL, tasks_done INTEGER, tasks_assigned INTEGER);''')
-#         app.logger.info('Initialized the database!')
-# else:
-#     app.logger.info('Database already contains the tasks table.')
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -109,7 +77,7 @@ def done():
 @app.route("/stats", methods=["GET","POST"])
 def stats():
     #week 0 is already added in the table so MAX(week) will always return an int (will never return NONE)
-    week = db.execute("SELECT MAX(week) FROM stats;")[0][max_week]
+    week = db.execute("SELECT MAX(week) as max_week FROM stats;")[0]['max_week']
     if request.method == 'POST':
         week += 1
         tasks_done = {}
@@ -142,8 +110,8 @@ def stats():
                 except:
                     x['success_ratio'] = 'Undefined'
                 if week >= 3:
-                    last_three_done = int(db.execute("SELECT SUM(tasks_done) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0][sum_tasks_done])
-                    last_three_assigned = int(db.execute("SELECT SUM(tasks_assigned) FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0][sum_tasks_assigned])
+                    last_three_done = int(db.execute("SELECT SUM(tasks_done) as sum_done FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum_done'])
+                    last_three_assigned = int(db.execute("SELECT  (tasks_assigned)  as sum_assigned FROM stats WHERE tasker = ? AND week BETWEEN ? and ?;", tasker, week - 2, week)[0]['sum_assigned'])
                 else:
                     last_three_done = db.execute("SELECT tasks_done FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_done']
                     last_three_assigned = db.execute("SELECT tasks_assigned FROM stats WHERE tasker = ? AND week = 0;", tasker)[0]['tasks_assigned']
@@ -151,7 +119,7 @@ def stats():
                     x['last_three'] = round(100 * last_three_done/last_three_assigned, 1)
                 except:
                     x['last_three'] = 'Undefined'
-                high_score_max = int(db.execute("SELECT MAX(tasks_done) FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0][max_tasks_done])
+                high_score_max = int(db.execute("SELECT MAX(tasks_done) as max_tasks FROM stats WHERE tasker = ? AND NOT week = 0;", tasker)[0]['max_tasks'])
                 high_score_weeks =  db.execute("SELECT week FROM stats WHERE tasker = ? AND NOT week = 0 AND tasks_done = ? ;", tasker, high_score_max)
                 x['high_score'] = high_score_max
                 x['high_score_weeks'] = str(high_score_weeks[0]['week'])
